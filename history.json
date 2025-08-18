@@ -1,0 +1,42 @@
+[
+  {
+    "id": "61d56674-1b0b-41c0-a355-bed4353df569",
+    "role": "user",
+    "content": "xin chào"
+  },
+  {
+    "id": "f6758b81-3937-40ae-9e7f-38b93a7b976a",
+    "role": "assistant",
+    "content": "Tôi có thể giúp gì cho bạn?"
+  },
+  {
+    "id": "7baa9843-ca8c-4c5b-ac38-e2f98d081064",
+    "role": "user",
+    "content": "tôi tên là khang"
+  },
+  {
+    "id": "27879014-7ed7-493b-aadc-e817b73b3736",
+    "role": "assistant",
+    "content": "Chào Khang, tôi có thể giúp gì cho bạn?\n"
+  },
+  {
+    "id": "311b5b5d-1c7e-46da-891b-9964875813bb",
+    "role": "user",
+    "content": "tôi tên là gì"
+  },
+  {
+    "id": "db9f1f03-025f-4032-b47c-0f3fad703a8d",
+    "role": "assistant",
+    "content": "Bạn tên là Khang.\n"
+  },
+  {
+    "id": "8ada4b7c-2e4e-4276-89eb-3eb6948316c9",
+    "role": "user",
+    "content": "who is ronaldo"
+  },
+  {
+    "id": "ae955c44-4f79-4b7c-b446-ebcf7b25baf2",
+    "role": "assistant",
+    "content": "Cristiano Ronaldo is a Portuguese professional footballer who plays as a forward and is the captain of the Portugal national team. He is widely regarded as one of the greatest players of all time. He began his career with Sporting CP before signing with Manchester United in 2003. He became a star player at United, where he won several trophies, including the Premier League title and the Champions League.\n"
+  }
+]
