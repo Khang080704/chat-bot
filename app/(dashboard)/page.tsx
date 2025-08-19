@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { uuidv4 } from "zod/v4";
+import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Message = {
     id: string;
@@ -14,12 +15,14 @@ type Message = {
 export default function Page() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
+    const router = useRouter();
 
     async function sendMessage(input: string) {
         const newMessages: Message[] = [
             ...messages,
             { id: crypto.randomUUID(), role: "user", content: input },
         ];
+        const sessionId = crypto.randomUUID();
 
         setMessages(newMessages);
 
@@ -30,7 +33,7 @@ export default function Page() {
             },
             body: JSON.stringify({
                 message: input,
-                sessionId: Math.random().toString(36).substring(2, 15), 
+                sessionId
             }),
         });
 
@@ -43,6 +46,7 @@ export default function Page() {
                 content: data.output,
             },
         ]);
+        router.push(`/c/${sessionId}`);
     }
 
     return (

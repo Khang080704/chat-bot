@@ -1,23 +1,11 @@
 import redis from "@/db/redis";
 import ChatTitle from "./ChatTitle";
+import { currentUser } from "@clerk/nextjs/server";
 
 async function getAllListKeys() {
-    let cursor = "0";
-    let listKeys: string[] = [];
-
-    do {
-        const [nextCursor, keys] = await redis.scan(cursor);
-        cursor = nextCursor;
-
-        for (const key of keys) {
-            const type = await redis.type(key);
-            if (type === "list") {
-                listKeys.push(key);
-            }
-        }
-    } while (cursor !== "0");
-
-    return listKeys;
+    const user = await currentUser();
+    const listChat = await redis.lrange(`${user?.id}`, 0, -1);
+    return listChat
 }
 
 export default async function ListChat() {
