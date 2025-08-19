@@ -11,19 +11,16 @@ type Message = {
 };
 
 export default function Page() {
-    // const { messages, sendMessage, status } = useChat({
-    //     transport: new DefaultChatTransport({
-    //         api: "/api/chat2",
-    //     }),
-    // });
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
 
     async function sendMessage(input: string) {
-        setMessages((prev) => [
-            ...prev,
+        const newMessages: Message[] = [
+            ...messages,
             { id: crypto.randomUUID(), role: "user", content: input },
-        ]);
+        ];
+
+        setMessages(newMessages);
 
         const res = await fetch("/api/chat2", {
             method: "POST",
@@ -32,16 +29,19 @@ export default function Page() {
             },
             body: JSON.stringify({
                 message: input,
-                his: messages
+                his: newMessages,
             }),
         });
 
         const data = await res.json();
         setMessages((prev) => [
             ...prev,
-            { id: crypto.randomUUID(), role: "assistant", content: data.output },
+            {
+                id: crypto.randomUUID(),
+                role: "assistant",
+                content: data.output,
+            },
         ]);
-
     }
 
     return (
@@ -85,10 +85,7 @@ export default function Page() {
                     placeholder="Type your message..."
                     className="flex-1"
                 />
-                <Button
-                    type="submit"
-                    className="h-10 px-6"
-                >
+                <Button type="submit" className="h-10 px-6">
                     Send
                 </Button>
             </form>
