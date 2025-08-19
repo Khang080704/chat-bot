@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 const tools = [WikiTool, TavilyTool, fileTool];
 
 export async function POST(request: Request) {
-    const { message } = await request.json();
+    const { message, sessionId } = await request.json();
 
     const executor = createExecutor(
         "You are a helpful assistance that help user answer the following information. You have to access these tools and respone to user the information",
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
         },
         {
             configurable: {
-                sessionId: "123",
+                sessionId: `${sessionId}`,
             },
         }
     );

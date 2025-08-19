@@ -7,7 +7,7 @@ import { model } from "./model";
 import { ChatMessageHistory } from "langchain/memory";
 import { RunnableWithMessageHistory } from "@langchain/core/runnables";
 import { vectorStore } from "./redis";
-import { history } from "./redis";
+import { createHistory } from "./redis";
 
 export function createExecutor(systemPrompt: string, tools: any[]) {
     const prompt = ChatPromptTemplate.fromMessages([
@@ -22,10 +22,10 @@ export function createExecutor(systemPrompt: string, tools: any[]) {
 
     const runnableWithHistory = new RunnableWithMessageHistory({
         runnable: excutor,
-        getMessageHistory: async () => {
-            return history
+        getMessageHistory: async (sessionId: string) => {
+            return createHistory(sessionId);
         },
-        inputMessagesKey: "input", // khớp với inputKey bạn dùng
+        inputMessagesKey: "input", 
         historyMessagesKey: "chat_history",
         outputMessagesKey: "output",
     });
