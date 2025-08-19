@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { uuidv4 } from "zod/v4";
+import { useParams } from "next/navigation";
 
 type Message = {
     id: string;
@@ -14,6 +14,23 @@ type Message = {
 export default function Page() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
+    const id = useParams().id as string;
+
+    useEffect(() => {
+        (async () => {
+            const res = await fetch("/api/chatDetail", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    sessionId: id,
+                }),
+            });
+            const data = await res.json();
+            setMessages(data.respone);
+        })();
+    }, []);
 
     async function sendMessage(input: string) {
         const newMessages: Message[] = [
@@ -30,7 +47,7 @@ export default function Page() {
             },
             body: JSON.stringify({
                 message: input,
-                sessionId: Math.random().toString(36).substring(2, 15), 
+                sessionId: id,
             }),
         });
 
