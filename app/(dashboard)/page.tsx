@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { chatListStore } from "@/app/store/list";
 
 type Message = {
     id: string;
@@ -46,6 +47,7 @@ export default function Page() {
                 content: data.output,
             },
         ]);
+        chatListStore.getState().addList(sessionId);
         router.push(`/c/${sessionId}`);
     }
 
