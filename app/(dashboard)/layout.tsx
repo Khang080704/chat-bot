@@ -2,6 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import redis from "@/db/redis";
 import { currentUser } from "@clerk/nextjs/server";
+import FetchChatList from "@/components/fetchChatList";
 
 export default async function DashboardLayout({children}: {children: React.ReactNode}) {
     const user = await currentUser()
@@ -14,6 +15,7 @@ export default async function DashboardLayout({children}: {children: React.React
 
     return (
         <SidebarProvider>
+            <FetchChatList/>
             <SidebarTrigger />
             <AppSidebar />
             <main className="w-full">{children}</main>

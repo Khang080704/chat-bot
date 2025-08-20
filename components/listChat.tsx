@@ -1,18 +1,12 @@
-import redis from "@/db/redis";
+'use client'
 import ChatTitle from "./ChatTitle";
-import { currentUser } from "@clerk/nextjs/server";
+import { chatListStore } from "@/app/store/list";
 
-async function getAllListKeys() {
-    const user = await currentUser();
-    const listChat = await redis.lrange(`${user?.id}`, 0, -1);
-    return listChat
-}
-
-export default async function ListChat() {
-    const listChat = await getAllListKeys()
+export default function ListChat() {
+    const listChat = chatListStore(state => state.listChat);
     return (
-        <div>
-            <h2>Chat List</h2>
+        <div className="">
+            <h2 className="text-gray-400 text-xl my-2 px-3">Chat</h2>
             <ul>
                 {listChat.map((chatKey) => (
                     <div key={chatKey} className="cursor-pointer">

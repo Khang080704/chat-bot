@@ -1,5 +1,6 @@
 'use client'
 import { redirect } from "next/navigation";
+import ThreeDotsMenu from "./ThreeDots";
 
 export default function ChatTitle({chatkey}: any) {
     const getChat = () => {
@@ -7,8 +8,9 @@ export default function ChatTitle({chatkey}: any) {
     };
 
     return (
-        <div onClick={getChat}>
-            <h2>Chat Title: {chatkey}</h2>
+        <div onClick={getChat} className="hover:bg-gray-200 p-3 rounded-2xl group flex items-center justify-between cursor-pointer">
+            <h2>{chatkey}</h2>
+            <ThreeDotsMenu chatId={chatkey} />
         </div>
     )
 }

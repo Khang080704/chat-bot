@@ -1,6 +1,6 @@
 "use client";
 
-import { NotebookIcon } from "lucide-react";
+import { NotebookIcon, NotebookPenIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
 export default function NewChat() {
@@ -9,8 +9,8 @@ export default function NewChat() {
     };
 
     return (
-        <div className="flex cursor-pointer align-baseline" onClick={handleNewChat}>
-            <NotebookIcon /> New Chat
+        <div className="flex cursor-pointer items-center gap-2 text-md hover:bg-gray-200 p-3 rounded-2xl" onClick={handleNewChat}>
+            <NotebookPenIcon /> New Chat
         </div>
     );
 }
