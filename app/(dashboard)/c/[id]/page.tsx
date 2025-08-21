@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useParams } from "next/navigation";
 import ReactMarkdown from "react-markdown";
+import Image from "next/image";
+import Logo from "@/public/ChatGPT-Logo.png";
 
 type Message = {
     id: string;
@@ -79,11 +81,12 @@ export default function Page() {
                                 : "justify-start"
                         }`}
                     >
+
                         <div
                             className={`px-4 py-2 rounded-lg break-words ${
                                 message.role === "user"
                                     ? "bg-blue-500 text-white max-w-xs"
-                                    : "bg-gray-200 text-gray-900"
+                                    : "bg-gray-200 text-gray-900 max-w-lg"
                             }`}
                         >
                             {message.role === "assistant" ? (

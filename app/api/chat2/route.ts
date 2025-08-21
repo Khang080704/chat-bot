@@ -4,9 +4,9 @@ import { fileTool } from "@/lib/tools/file";
 import { NextResponse } from "next/server";
 import redis from "@/db/redis";
 import { currentUser } from "@clerk/nextjs/server";
-import { createStreamableValue } from "@ai-sdk/rsc";
+import { browserTool } from "@/lib/tools/browser";
 
-const tools = [WikiTool, TavilyTool, fileTool];
+const tools = [WikiTool, TavilyTool, fileTool, browserTool];
 
 export async function POST(request: Request) {
     const { message, sessionId } = await request.json();
