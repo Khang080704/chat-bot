@@ -14,44 +14,109 @@ import { Trash, Edit, Share } from "lucide-react";
 import { redirect } from "next/navigation";
 import { chatListStore } from "@/app/store/list";
 
-export default function ThreeDotsMenu({chatId}: {chatId: string}) {
-    async function handleDelete(e:any) {
-        e.stopPropagation();
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { useState } from "react";
 
-        const res = await fetch('/api/delete', {
-            method: 'DELETE',
-            body: JSON.stringify({chatId }),
+export default function ThreeDotsMenu({ chatId }: { chatId: string }) {
+    const [open, setOpen] = useState(false);
+
+    async function handleDelete(e: any) {
+        e.stopPropagation();
+        e.preventDefault()
+
+        const res = await fetch("/api/delete", {
+            method: "DELETE",
+            body: JSON.stringify({ chatId }),
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
         const message = await res.json();
         console.log(message);
         chatListStore.getState().removeList(chatId);
-        redirect('/')
+        redirect("/");
     }
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                    <MoreHorizontal className="h-5 w-5" />
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40">
-                <DropdownMenuLabel>Option</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => alert("Edit")} className="p-3">
-                    <span><Edit className="inline-block mr-2" /></span> Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => alert("Share")} className="p-3">
-                    <span><Share className="inline-block mr-2" /></span> Share
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={(e) => handleDelete(e)} className="p-3 text-red-500">
-                    <span><Trash className="inline-block mr-2 text-red-500" /></span> 
-                    <span className="text-red-500">Delete</span> 
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="rounded-full"
+                    >
+                        <MoreHorizontal className="h-5 w-5" />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-40" onClick={(e) => e.stopPropagation()}>
+                    <DropdownMenuLabel>Option</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                        onClick={() => alert("Edit")}
+                        className="p-3"
+                    >
+                        <span>
+                            <Edit className="inline-block mr-2" />
+                        </span>{" "}
+                        Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        onClick={() => alert("Share")}
+                        className="p-3"
+                    >
+                        <span>
+                            <Share className="inline-block mr-2" />
+                        </span>{" "}
+                        Share
+                    </DropdownMenuItem>
+
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <DropdownMenuItem
+                                onSelect={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation()
+                                }}
+                                className="p-3 text-red-500 w-full"
+                            >
+                                <span>
+                                    <Trash className="inline-block mr-2 text-red-500" />
+                                </span>
+                                <span className="text-red-500">Delete</span>
+                            </DropdownMenuItem>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle className="flex justify-start text-2xl">Delete Chat?</DialogTitle>
+                                <DialogDescription className="text-md text-black flex justify-start">
+                                    This will delete {chatId}.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter className="flex justify-end gap-2">
+                                
+                                <DialogClose asChild>
+                                    <Button variant="outline" className="hover:cursor-pointer">
+                                        Cancel
+                                    </Button>
+                                </DialogClose>
+                                <Button variant="destructive" className="hover:cursor-pointer" onClick={(e) => handleDelete(e)}>
+                                    Delete
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </>
     );
 }

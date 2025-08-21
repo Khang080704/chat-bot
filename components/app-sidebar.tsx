@@ -5,6 +5,7 @@ import {
     SidebarGroup,
     SidebarHeader,
     SidebarMenu,
+    SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import ListChat from "./listChat";
