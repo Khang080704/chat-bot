@@ -1,9 +1,13 @@
 'use client'
 import { redirect } from "next/navigation";
 import ThreeDotsMenu from "./ThreeDots";
+import { useSidebar } from "./ui/sidebar";
 
 export default function ChatTitle({chatkey}: any) {
+    const {setOpenMobile} = useSidebar()
+
     const getChat = () => {
+        setOpenMobile(false)
         redirect(`/c/${chatkey}`)
     };
 

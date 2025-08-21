@@ -16,8 +16,8 @@ export default async function DashboardLayout({children}: {children: React.React
     return (
         <SidebarProvider>
             <FetchChatList/>
+            <SidebarTrigger/>
             <AppSidebar />
-            <SidebarTrigger />
             <main className="w-full">{children}</main>
         </SidebarProvider>
     );
