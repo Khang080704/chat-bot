@@ -64,7 +64,7 @@ export default function Page() {
             {
                 id: crypto.randomUUID(),
                 role: "assistant",
-                content: data.output,
+                content: data.agentResult.output,
             },
         ]);
         setLoading(false);

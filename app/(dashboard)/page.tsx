@@ -47,10 +47,10 @@ export default function Page() {
             {
                 id: crypto.randomUUID(),
                 role: "assistant",
-                content: data.output,
+                content: data.agentResult.output,
             },
         ]);
-        chatListStore.getState().addList(sessionId);
+        chatListStore.getState().addList({sessionId: `${sessionId}`, title: data.chatTitle});
         setLoading(false);
         router.push(`/c/${sessionId}`);
     }
