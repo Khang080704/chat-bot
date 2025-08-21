@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { chatListStore } from "@/app/store/list";
 
+
 type Message = {
     id: string;
     role: "user" | "assistant";
@@ -17,8 +18,10 @@ export default function Page() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
     async function sendMessage(input: string) {
+        setLoading(true);
         const newMessages: Message[] = [
             ...messages,
             { id: crypto.randomUUID(), role: "user", content: input },
@@ -34,7 +37,7 @@ export default function Page() {
             },
             body: JSON.stringify({
                 message: input,
-                sessionId
+                sessionId,
             }),
         });
 
@@ -48,6 +51,7 @@ export default function Page() {
             },
         ]);
         chatListStore.getState().addList(sessionId);
+        setLoading(false);
         router.push(`/c/${sessionId}`);
     }
 
@@ -74,6 +78,19 @@ export default function Page() {
                         </div>
                     </div>
                 ))}
+                {loading && (
+                    <span className="inline-block bg-gray-300 px-3 py-2 rounded-xl">
+                        <span className="animate-bounce inline-block w-2 h-2 bg-gray-400 rounded-full mr-1"></span>
+                        <span
+                            className="animate-bounce inline-block w-2 h-2 bg-gray-400 rounded-full mr-1"
+                            style={{ animationDelay: "0.1s" }}
+                        ></span>
+                        <span
+                            className="animate-bounce inline-block w-2 h-2 bg-gray-400 rounded-full"
+                            style={{ animationDelay: "0.2s" }}
+                        ></span>
+                    </span>
+                )}
             </div>
 
             <form

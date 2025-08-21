@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useParams } from "next/navigation";
+import ReactMarkdown from "react-markdown";
 
 type Message = {
     id: string;
@@ -15,6 +16,7 @@ export default function Page() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const id = useParams().id as string;
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -33,6 +35,7 @@ export default function Page() {
     }, []);
 
     async function sendMessage(input: string) {
+        setLoading(true);
         const newMessages: Message[] = [
             ...messages,
             { id: crypto.randomUUID(), role: "user", content: input },
@@ -52,6 +55,7 @@ export default function Page() {
         });
 
         const data = await res.json();
+
         setMessages((prev) => [
             ...prev,
             {
@@ -60,6 +64,7 @@ export default function Page() {
                 content: data.output,
             },
         ]);
+        setLoading(false);
     }
 
     return (
@@ -75,16 +80,34 @@ export default function Page() {
                         }`}
                     >
                         <div
-                            className={`px-4 py-2 rounded-lg max-w-xs break-words ${
+                            className={`px-4 py-2 rounded-lg break-words ${
                                 message.role === "user"
-                                    ? "bg-blue-500 text-white"
+                                    ? "bg-blue-500 text-white max-w-xs"
                                     : "bg-gray-200 text-gray-900"
                             }`}
                         >
-                            {message.content}
+                            {message.role === "assistant" ? (
+                                <ReactMarkdown>{message.content}</ReactMarkdown>
+                            ) : (
+                                <>{message.content}</>
+                            )}
                         </div>
                     </div>
                 ))}
+
+                {loading && (
+                    <span className="inline-block bg-gray-300 px-3 py-2 rounded-xl">
+                        <span className="animate-bounce inline-block w-2 h-2 bg-gray-400 rounded-full mr-1"></span>
+                        <span
+                            className="animate-bounce inline-block w-2 h-2 bg-gray-400 rounded-full mr-1"
+                            style={{ animationDelay: "0.1s" }}
+                        ></span>
+                        <span
+                            className="animate-bounce inline-block w-2 h-2 bg-gray-400 rounded-full"
+                            style={{ animationDelay: "0.2s" }}
+                        ></span>
+                    </span>
+                )}
             </div>
 
             <form
