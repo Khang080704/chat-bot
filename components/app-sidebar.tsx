@@ -45,11 +45,9 @@ export function AppSidebar() {
                         </SidebarMenu>
                     </SidebarGroup>
 
-                    {state == "expanded" && (
-                        <SidebarGroup className="flex-1 overflow-y-auto">
-                            <ListChat />
-                        </SidebarGroup>
-                    )}
+                    <SidebarGroup className="flex-1 overflow-y-auto">
+                        {state == "expanded" && <ListChat />}
+                    </SidebarGroup>
 
                     <SidebarFooter>
                         <SidebarMenu>

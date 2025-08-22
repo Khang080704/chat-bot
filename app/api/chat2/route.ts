@@ -18,7 +18,6 @@ export async function POST(request: Request) {
         const chats = await redis.lrange(`${user.id}`, 0, -1);
         const parsedChats = chats.map(item => JSON.parse(item));
         if (!parsedChats.some(chat => chat.sessionId === sessionId)) {
-            console.log('had chat')
             const titlePrompt = `Briefly summarize the following question into a short title, right in regular text:\n\n${message}`;
             const title = await model.invoke(titlePrompt);
             chatTitle = title.content as string;
