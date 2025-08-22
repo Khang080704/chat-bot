@@ -7,6 +7,20 @@ import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { chatListStore } from "@/app/store/list";
 import { ArrowUp } from "lucide-react";
+import {
+    PromptInput,
+    PromptInputTextarea,
+    PromptInputToolbar,
+    PromptInputSubmit,
+} from "@/components/ui/shadcn-io/ai/prompt-input";
+import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
+import { Loader } from "@/components/ui/shadcn-io/ai/loader";
+import {
+    Conversation,
+    ConversationContent,
+    ConversationScrollButton,
+} from "@/components/ui/shadcn-io/ai/conversation";
+import { Response } from "@/components/ui/shadcn-io/ai/response";
 
 type Message = {
     id: string;
@@ -50,50 +64,35 @@ export default function Page() {
                 content: data.agentResult.output,
             },
         ]);
-        chatListStore.getState().addList({sessionId: `${sessionId}`, title: data.chatTitle});
+        chatListStore
+            .getState()
+            .addList({ sessionId: `${sessionId}`, title: data.chatTitle });
         setLoading(false);
         router.push(`/c/${sessionId}`);
     }
 
     return (
         <div className="w-full sm:px-5 mx-auto flex flex-col h-screen py-6">
-            <div className="flex-1 overflow-y-auto bg-white rounded-lg shadow p-6 mb-4 space-y-4">
-                {messages.map((message, index) => (
-                    <div
-                        key={index}
-                        className={`flex ${
-                            message.role === "user"
-                                ? "justify-end"
-                                : "justify-start"
-                        }`}
-                    >
-                        <div
-                            className={`px-4 py-2 rounded-lg max-w-xs break-words ${
-                                message.role === "user"
-                                    ? "bg-blue-500 text-white max-w-[200px] sm:max-w-sm lg:max-w-lg"
-                                    : "bg-gray-200 text-gray-900"
-                            }`}
-                        >
-                            {message.content}
-                        </div>
-                    </div>
-                ))}
-                {loading && (
-                    <span className="inline-block bg-gray-300 px-3 py-2 rounded-xl">
-                        <span className="animate-bounce inline-block w-2 h-2 bg-gray-400 rounded-full mr-1"></span>
-                        <span
-                            className="animate-bounce inline-block w-2 h-2 bg-gray-400 rounded-full mr-1"
-                            style={{ animationDelay: "0.1s" }}
-                        ></span>
-                        <span
-                            className="animate-bounce inline-block w-2 h-2 bg-gray-400 rounded-full"
-                            style={{ animationDelay: "0.2s" }}
-                        ></span>
-                    </span>
-                )}
-            </div>
+            <Conversation className="w-full relative h-120">
+                <ConversationContent>
+                    {messages.map((message, index) => (
+                        <Message from={message.role} key={index}>
+                            <MessageContent role={message.role}>
+                                {message.role === "assistant" ? (
+                                    <Response>{message.content}</Response>
+                                ) : (
+                                    message.content
+                                )}
+                            </MessageContent>
+                        </Message>
+                    ))}
 
-            <form
+                    {loading && <Loader />}
+                </ConversationContent>
+
+                <ConversationScrollButton />
+            </Conversation>
+            <PromptInput
                 onSubmit={(e) => {
                     e.preventDefault();
                     if (input.trim()) {
@@ -103,19 +102,16 @@ export default function Page() {
                 }}
                 className="flex items-center gap-2"
             >
-                <div className="shadow rounded-3xl py-3 px-5 flex w-full items-center justify-center">
-                    <input
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        className="w-full border-none outline-none p-2"
-                        placeholder="Type your message..."
-                        disabled={loading}
-                    />
-                    <Button type="submit" className="h-10 px-6 rounded-3xl" disabled={loading || input==''}>
-                        <ArrowUp className="font-bold"/>
-                    </Button>
-                </div>
-            </form>
+                <PromptInputTextarea
+                    value={input}
+                    onChange={(e: any) => setInput(e.target.value)}
+                    placeholder="Type your message..."
+                />
+
+                <PromptInputToolbar className="h-10 px-6 rounded-3xl">
+                    <PromptInputSubmit disabled={!input.trim()} />
+                </PromptInputToolbar>
+            </PromptInput>
         </div>
     );
 }

@@ -1,13 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useParams } from "next/navigation";
-import ReactMarkdown from "react-markdown";
-import Image from "next/image";
-import Logo from "@/public/ChatGPT-Logo.png";
-import { ArrowUp, Plus } from "lucide-react";
+import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
+import {
+    PromptInput,
+    PromptInputTextarea,
+    PromptInputToolbar,
+    PromptInputSubmit,
+} from "@/components/ui/shadcn-io/ai/prompt-input";
+import { Loader } from "@/components/ui/shadcn-io/ai/loader";
+import {
+    Conversation,
+    ConversationContent,
+    ConversationScrollButton,
+} from "@/components/ui/shadcn-io/ai/conversation";
+import { Response } from "@/components/ui/shadcn-io/ai/response";
 
 type Message = {
     id: string;
@@ -71,50 +79,32 @@ export default function Page() {
     }
 
     return (
-        <div className="w-full sm:px-5 mx-auto flex flex-col h-screen py-6">
-            <div className="flex-1 overflow-y-auto bg-white rounded-lg shadow p-6 mb-4 space-y-4">
-                {messages.map((message, index) => (
-                    <div
-                        key={index}
-                        className={`flex ${
-                            message.role === "user"
-                                ? "justify-end"
-                                : "justify-start"
-                        }`}
-                    >
+        <>
+            <Conversation className="w-full relative h-120">
+                <ConversationContent>
+                    {messages.map(
+                        (message, index) => (
+                            <Message from={message.role} key={index}>
+                                <MessageContent role={message.role}>
+                                    {message.role === "assistant" ? (
+                                        <Response>
+                                            {message.content}
+                                        </Response>
+                                    ) : (
+                                        message.content
+                                    )}
+                                </MessageContent>
+                            </Message>
+                        )
+                    )}
 
-                        <div
-                            className={`px-4 py-2 rounded-lg break-words ${
-                                message.role === "user"
-                                    ? "bg-blue-500 text-white max-w-[200px] sm:max-w-sm lg:max-w-lg"
-                                    : "bg-gray-200 text-gray-900 max-w-lg"
-                            }`}
-                        >
-                            {message.role === "assistant" ? (
-                                <ReactMarkdown>{message.content}</ReactMarkdown>
-                            ) : (
-                                <>{message.content}</>
-                            )}
-                        </div>
-                    </div>
-                ))}
+                    {loading && <Loader />}
+                </ConversationContent>
 
-                {loading && (
-                    <span className="inline-block bg-gray-300 px-3 py-2 rounded-xl">
-                        <span className="animate-bounce inline-block w-2 h-2 bg-gray-400 rounded-full mr-1"></span>
-                        <span
-                            className="animate-bounce inline-block w-2 h-2 bg-gray-400 rounded-full mr-1"
-                            style={{ animationDelay: "0.1s" }}
-                        ></span>
-                        <span
-                            className="animate-bounce inline-block w-2 h-2 bg-gray-400 rounded-full"
-                            style={{ animationDelay: "0.2s" }}
-                        ></span>
-                    </span>
-                )}
-            </div>
+                <ConversationScrollButton />
+            </Conversation>
 
-            <form
+            <PromptInput
                 onSubmit={(e) => {
                     e.preventDefault();
                     if (input.trim()) {
@@ -122,21 +112,19 @@ export default function Page() {
                         setInput("");
                     }
                 }}
-                className="flex items-center gap-2"
+                className="mt-2 w-full max-w-4xl mx-auto relative"
             >
-                <div className="shadow rounded-3xl py-3 px-5 flex w-full items-center justify-center">
-                    <input
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        className="w-full border-none outline-none p-2"
-                        placeholder="Type your message..."
-                        disabled={loading}
-                    />
-                    <Button type="submit" className="h-10 px-6 rounded-3xl" disabled={loading || input==''}>
-                        <ArrowUp className="font-bold"/>
-                    </Button>
-                </div>
-            </form>
-        </div>
+                <PromptInputTextarea
+                    value={input}
+                    onChange={(e: any) => setInput(e.target.value)}
+                    placeholder="Type your message..."
+                    className="pr-12"
+                />
+
+                <PromptInputToolbar className="absolute bottom-1 right-1">
+                    <PromptInputSubmit disabled={!input.trim()} />
+                </PromptInputToolbar>
+            </PromptInput>
+        </>
     );
 }
