@@ -12,5 +12,5 @@ export async function POST(req: NextRequest) {
             content: parse.data.content,
         };
     }).reverse();
-    return NextResponse.json({respone: parsedHistory})
+    return NextResponse.json({response: parsedHistory})
 }
