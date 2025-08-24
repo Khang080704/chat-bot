@@ -13,19 +13,8 @@ export async function DELETE(req: NextRequest) {
         );
     }
 
-    const items = await redis.lrange(`${user.id}`, 0, -1);
-
-    const target = items.find((item) => {
-        try {
-            const parsed = JSON.parse(item);
-            return parsed.sessionId === chatId;
-        } catch {
-            return false;
-        }
-    });
-
     // Delete the chat from Redis
-    await redis.lrem(`${user.id}`, 1, target as string);
+    await redis.hdel(`user:${user.id}:sessions`, chatId);
     await redis.del(`${chatId}`);
 
     return NextResponse.json({ message: "Chat deleted" });

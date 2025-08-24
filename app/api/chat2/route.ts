@@ -21,7 +21,7 @@ export async function POST(request: Request) {
             const titlePrompt = `Briefly summarize the following question into a short title, right in regular text:\n\n${message}`;
             const title = await model.invoke(titlePrompt);
             chatTitle = title.content as string;
-            await redis.lpush(`${user.id}`, JSON.stringify({ sessionId: `${sessionId}`, title: title.content }));
+            await redis.hset(`user:${user.id}:sessions`, sessionId, JSON.stringify({ sessionId: `${sessionId}`, title: title.content }));
         }
     }
 
