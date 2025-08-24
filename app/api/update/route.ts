@@ -5,17 +5,12 @@ import redis from "@/db/redis";
 export async function PATCH(req: NextRequest) {
     const user = await currentUser();
     const {sessionId, newTitle} = await req.json();
-    const list = await redis.lrange(`${user?.id}`, 0, -1)
 
-    for (let i = 0; i < list.length; i++) {
-        const item = JSON.parse(list[i]);
-        if(item.sessionId == sessionId) {
-            item.title = newTitle;
-            await redis.lset(`${user?.id}`, i, JSON.stringify(item));
-            return NextResponse.json({message: 'Title updated successfully'}, {status: 200})
-        }
-    }
+    const raw = await redis.hget(`user:${user?.id}:sessions`, sessionId);
+    const session = JSON.parse(raw as string);
+    session.title = newTitle;
+    await redis.hset(`user:${user?.id}:sessions`, sessionId, JSON.stringify(session));
 
-    return NextResponse.json({message: 'Update fail'}, {status: 500})
+    return NextResponse.json({message: 'Update success'}, {status: 200})
 
 }

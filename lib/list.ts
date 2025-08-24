@@ -4,9 +4,10 @@ import redis from "@/db/redis";
 
 export async function getAllListKeys() {
     const user = await currentUser();
-    const listChat = await redis.lrange(`${user?.id}`, 0, -1);
-    return listChat.map(item => {
-        const { sessionId, title } = JSON.parse(item);
-        return { sessionId, title };
-    });
+    const listChat = await redis.hgetall(`user:${user?.id}:sessions`);
+    // return listChat.map(item => {
+    //     const { sessionId, title } = JSON.parse(item);
+    //     return { sessionId, title };
+    // });
+    return Object.values(listChat).map((s) => JSON.parse(s));
 }
