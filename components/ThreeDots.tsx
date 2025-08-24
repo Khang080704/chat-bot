@@ -24,10 +24,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { RenameContext } from "@/context/renameContext";
 
 export default function ThreeDotsMenu({ chatId }: { chatId: string }) {
     const [open, setOpen] = useState(false);
+    const rename = useContext(RenameContext);
+    
 
     async function handleDelete(e: any) {
         e.stopPropagation();
@@ -62,7 +65,10 @@ export default function ThreeDotsMenu({ chatId }: { chatId: string }) {
                     <DropdownMenuLabel>Option</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
-                        onClick={() => alert("Edit")}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            rename?.setIsRenaming(true)
+                        }}
                         className="p-3"
                     >
                         <span>

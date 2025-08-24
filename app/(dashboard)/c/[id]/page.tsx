@@ -82,21 +82,17 @@ export default function Page() {
         <>
             <Conversation className="w-full relative h-120">
                 <ConversationContent>
-                    {messages.map(
-                        (message, index) => (
-                            <Message from={message.role} key={index}>
-                                <MessageContent role={message.role}>
-                                    {message.role === "assistant" ? (
-                                        <Response>
-                                            {message.content}
-                                        </Response>
-                                    ) : (
-                                        message.content
-                                    )}
-                                </MessageContent>
-                            </Message>
-                        )
-                    )}
+                    {messages.map((message, index) => (
+                        <Message from={message.role} key={index}>
+                            <MessageContent role={message.role}>
+                                {message.role === "assistant" ? (
+                                    <Response>{message.content}</Response>
+                                ) : (
+                                    message.content
+                                )}
+                            </MessageContent>
+                        </Message>
+                    ))}
 
                     {loading && <Loader />}
                 </ConversationContent>
