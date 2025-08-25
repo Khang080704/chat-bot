@@ -1,13 +1,17 @@
 import { createExecutor } from "@/lib/ai/createAgent";
-import { WikiTool, TavilyTool } from "@/lib/tools/search";
-import { fileTool } from "@/lib/tools/file";
+
 import { NextResponse } from "next/server";
 import redis from "@/db/redis";
 import { currentUser } from "@clerk/nextjs/server";
-import { browserTool } from "@/lib/tools/browser";
 import { model } from "@/lib/ai/model";
 
-const tools = [WikiTool, TavilyTool, fileTool, browserTool];
+//import tool
+import { ragTool } from "@/lib/tools/calculus";
+import { browserTool } from "@/lib/tools/browser";
+import { WikiTool, TavilyTool } from "@/lib/tools/search";
+import { fileTool } from "@/lib/tools/file";
+
+const tools = [WikiTool, TavilyTool, fileTool, browserTool, ragTool];
 
 export async function POST(request: Request) {
     const { message, sessionId } = await request.json();
