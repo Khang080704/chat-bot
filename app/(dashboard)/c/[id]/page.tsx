@@ -1,8 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
-import { Message, MessageContent } from "@/components/ui/shadcn-io/ai/message";
+import {
+    Message,
+    MessageAvatar,
+    MessageContent,
+} from "@/components/ui/shadcn-io/ai/message";
 import {
     PromptInput,
     PromptInputTextarea,
@@ -16,6 +20,10 @@ import {
     ConversationScrollButton,
 } from "@/components/ui/shadcn-io/ai/conversation";
 import { Response } from "@/components/ui/shadcn-io/ai/response";
+import Logo from "@/public/ChatGPT-Logo.png";
+import { getClerkUser } from "@/lib/auth/auth";
+import { useChatDetail } from "@/hooks/user-chat-detail";
+import { useCurrentUser } from "@/hooks/use-user";
 
 type Message = {
     id: string;
@@ -24,26 +32,20 @@ type Message = {
 };
 
 export default function Page() {
+    const id = useParams().id as string;
+    const { data, error, isLoading } = useChatDetail(id);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
-    const id = useParams().id as string;
     const [loading, setLoading] = useState(false);
+    const { data: userData } = useCurrentUser();
+
 
     useEffect(() => {
-        (async () => {
-            const res = await fetch("/api/chatDetail", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    sessionId: id,
-                }),
-            });
-            const data = await res.json();
-            setMessages(data.respone);
-        })();
-    }, []);
+        console.log('use effect called')
+        if(data?.response) {
+            setMessages(data.response);
+        }
+    }, [data]);
 
     async function sendMessage(input: string) {
         setLoading(true);
@@ -80,25 +82,39 @@ export default function Page() {
 
     return (
         <>
-            <Conversation className="w-full relative h-120">
-                <ConversationContent>
-                    {messages.map((message, index) => (
-                        <Message from={message.role} key={index}>
-                            <MessageContent role={message.role}>
-                                {message.role === "assistant" ? (
-                                    <Response>{message.content}</Response>
-                                ) : (
-                                    message.content
+            {isLoading ? (
+                <Loader />
+            ) : (
+                <Conversation className="w-full relative h-120">
+                    <ConversationContent>
+                        {messages.map((message, index) => (
+                            <Message
+                                from={message.role}
+                                key={index}
+                                className="flex items-center"
+                            >
+                                <MessageContent role={message.role}>
+                                    {message.role === "assistant" ? (
+                                        <Response>{message.content}</Response>
+                                    ) : (
+                                        <>{message.content}</>
+                                    )}
+                                </MessageContent>
+                                {message.role === "user" && (
+                                    <MessageAvatar
+                                        src={userData?.imageUrl}
+                                        className=""
+                                    />
                                 )}
-                            </MessageContent>
-                        </Message>
-                    ))}
+                            </Message>
+                        ))}
 
-                    {loading && <Loader />}
-                </ConversationContent>
+                        {loading && <Loader />}
+                    </ConversationContent>
 
-                <ConversationScrollButton />
-            </Conversation>
+                    <ConversationScrollButton />
+                </Conversation>
+            )}
 
             <PromptInput
                 onSubmit={(e) => {
