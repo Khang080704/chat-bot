@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/shadcn-io/ai/conversation";
 import { Response } from "@/components/ui/shadcn-io/ai/response";
 import Logo from "@/public/ChatGPT-Logo.png";
-import { getClerkUser } from "@/lib/auth/auth";
 import { useChatDetail } from "@/hooks/user-chat-detail";
 import { useCurrentUser } from "@/hooks/use-user";
 

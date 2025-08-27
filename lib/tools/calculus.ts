@@ -7,10 +7,6 @@ import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 import { z } from "zod";
 import { tool } from "@langchain/core/tools";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
-import { Annotation, StateGraph } from "@langchain/langgraph";
-import { Document } from "@langchain/core/documents";
-import { pull } from "langchain/hub";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
 
 const rag = async ({ text }: { text: string }) => {
     const filePath = process.cwd() + "/public/Huyền sử Silmarillion-2.pdf";

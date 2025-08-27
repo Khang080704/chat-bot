@@ -2,12 +2,13 @@ import * as cheerio from "cheerio";
 import * as langchain from 'langchain/tools'
 import {tool} from "@langchain/core/tools"
 import z from "zod";
+import { CheerioWebBaseLoader } from "@langchain/community/document_loaders/web/cheerio";
 
 const browser = async({url}: {url: string}) => {
-    const res = await cheerio.fromURL(url);
-    const docs = res.text();
+    const loader = new CheerioWebBaseLoader(url);
+    const docs = await loader.load();
 
-    return docs;
+    return docs.map(doc => doc.pageContent).join("\n---\n");
 };
 
 export const browserTool = tool(browser, {
