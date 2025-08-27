@@ -1,12 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { currentUser } from "@clerk/nextjs/server";
-import redis from "./db/redis";
 
 const isProtectedRoute = createRouteMatcher(["/(.*)"]);
-const publicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
+const isPublicRoute = createRouteMatcher(["/sign-in(.*)", "/sign-up(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
-    if (!publicRoute(req)) {
+    if (!isPublicRoute(req)) {
         await auth.protect();
     }
 });
