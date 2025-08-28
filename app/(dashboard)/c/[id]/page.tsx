@@ -38,10 +38,9 @@ export default function Page() {
     const [loading, setLoading] = useState(false);
     const { data: userData } = useCurrentUser();
 
-
     useEffect(() => {
-        console.log('use effect called')
-        if(data?.response) {
+        console.log("use effect called");
+        if (data?.response) {
             setMessages(data.response);
         }
     }, [data]);
@@ -81,39 +80,43 @@ export default function Page() {
 
     return (
         <>
-            {isLoading ? (
-                <Loader />
-            ) : (
-                <Conversation className="w-full relative h-120">
-                    <ConversationContent>
-                        {messages.map((message, index) => (
-                            <Message
-                                from={message.role}
-                                key={index}
-                                className="flex items-center"
-                            >
-                                <MessageContent role={message.role}>
-                                    {message.role === "assistant" ? (
-                                        <Response>{message.content}</Response>
-                                    ) : (
-                                        <>{message.content}</>
+            <Conversation className="w-full relative h-120">
+                {isLoading ? (
+                    <Loader />
+                ) : (
+                    <>
+                        <ConversationContent>
+                            {messages.map((message, index) => (
+                                <Message
+                                    from={message.role}
+                                    key={index}
+                                    className="flex items-center"
+                                >
+                                    <MessageContent role={message.role}>
+                                        {message.role === "assistant" ? (
+                                            <Response>
+                                                {message.content}
+                                            </Response>
+                                        ) : (
+                                            <>{message.content}</>
+                                        )}
+                                    </MessageContent>
+                                    {message.role === "user" && (
+                                        <MessageAvatar
+                                            src={userData?.imageUrl}
+                                            className=""
+                                        />
                                     )}
-                                </MessageContent>
-                                {message.role === "user" && (
-                                    <MessageAvatar
-                                        src={userData?.imageUrl}
-                                        className=""
-                                    />
-                                )}
-                            </Message>
-                        ))}
+                                </Message>
+                            ))}
 
-                        {loading && <Loader />}
-                    </ConversationContent>
+                            {loading && <Loader />}
+                        </ConversationContent>
 
-                    <ConversationScrollButton />
-                </Conversation>
-            )}
+                        <ConversationScrollButton />
+                    </>
+                )}
+            </Conversation>
 
             <PromptInput
                 onSubmit={(e) => {
