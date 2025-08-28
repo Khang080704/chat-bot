@@ -12,14 +12,13 @@ import {
 } from "@/components/ui/sidebar";
 import ListChat from "./listChat";
 import NewChat from "./newChat";
-import { getClerkUser } from "@/lib/auth/auth";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { useSidebar } from "@/components/ui/sidebar";
 import Logo from "@/public/ChatGPT-Logo.png";
+import UserProfile from "./UserProfile";
 
 export function AppSidebar() {
-    //const user = await getClerkUser();
     const { isMobile, state } = useSidebar();
 
     if (isMobile) {
@@ -46,19 +45,13 @@ export function AppSidebar() {
                     </SidebarGroup>
 
                     <SidebarGroup className="flex-1 overflow-y-auto">
-                        {state == "expanded" && <ListChat />}
+                        <ListChat />
                     </SidebarGroup>
 
                     <SidebarFooter>
                         <SidebarMenu>
                             <SidebarMenuItem>
-                                <div className="flex items-center gap-2">
-                                    <UserButton />
-                                    <div className="flex flex-col">
-                                        {/* <p>{user.firstName} {user.lastName}</p>
-                                    <p>{user.email}</p> */}
-                                    </div>
-                                </div>
+                                <UserProfile/>
                             </SidebarMenuItem>
                         </SidebarMenu>
                     </SidebarFooter>
@@ -93,22 +86,14 @@ export function AppSidebar() {
                     </SidebarMenu>
                 </SidebarGroup>
 
-                {state == "expanded" && (
-                    <SidebarGroup className="flex-1 overflow-y-auto">
-                        <ListChat />
-                    </SidebarGroup>
-                )}
+                <SidebarGroup className="flex-1 overflow-y-auto">
+                    <ListChat />
+                </SidebarGroup>
 
                 <SidebarFooter>
                     <SidebarMenu>
                         <SidebarMenuItem>
-                            <div className="flex items-center gap-2">
-                                <UserButton />
-                                <div className="flex flex-col">
-                                    {/* <p>{user.firstName} {user.lastName}</p>
-                                    <p>{user.email}</p> */}
-                                </div>
-                            </div>
+                            <UserProfile/>
                         </SidebarMenuItem>
                     </SidebarMenu>
                 </SidebarFooter>
