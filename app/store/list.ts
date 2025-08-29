@@ -13,7 +13,8 @@ type ChatListStore = {
     addList: (chatId: chatSession) => void;
     removeList: (chatId: string) => void;
     getAllListKeys: () => Promise<void>;
-    sortList: () => Promise<void>;
+    updateSession: (sessionId: string, updatedAt: number) => Promise<void>;
+    setList: (list: chatSession[]) => void;
 };
 
 export const chatListStore = create<ChatListStore>((set) => ({
@@ -30,10 +31,14 @@ export const chatListStore = create<ChatListStore>((set) => ({
         const result = await getAllListKeys();
         set({ listChat: result });
     },
-    sortList: async () => {
-        const newSortList = await getAllListKeys();
+    updateSession: async (sessionId: string, updatedAt: number) => {
         set((state) => ({
-            listChat: newSortList
+            listChat: state.listChat.map((chat) =>
+                chat.sessionId === sessionId ? { ...chat, updatedAt } : chat
+            ).sort((a, b) => b.updatedAt - a.updatedAt),
         }));
-    }
+    },
+    setList: (list: chatSession[]) => {
+        set({ listChat: list });
+    },
 }));

@@ -14,7 +14,7 @@ export default function ChatTitle({
     chatkey: string;
     title: string;
 }) {
-    const { setOpenMobile } = useSidebar();
+    const { setOpenMobile, isMobile, state } = useSidebar();
     const [isRenaming, setIsRenaming] = useState(false);
     const [newTitle, setNewTitle] = useState(title);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -45,6 +45,10 @@ export default function ChatTitle({
             inputRef.current.select();
         }
     }, []);
+
+    if(isMobile || state === "collapsed") {
+        return null
+    }
 
     return (
         <RenameContext.Provider value={{ isRenaming, setIsRenaming }}>

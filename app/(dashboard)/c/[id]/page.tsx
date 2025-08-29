@@ -38,7 +38,7 @@ export default function Page() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const { data: userData } = useCurrentUser();
-    const list = chatListStore(state => state.sortList);
+    const updateSession = chatListStore((state) => state.updateSession);
 
     useEffect(() => {
         console.log("use effect called");
@@ -78,11 +78,11 @@ export default function Page() {
             },
         ]);
         setLoading(false);
-        await list();
+        await updateSession(id, Date.now());
     }
 
     return (
-        <>
+        <div className="w-full sm:px-5 mx-auto flex flex-col h-screen py-6 px-2">
             <Conversation className="w-full relative h-120">
                 {isLoading ? (
                     <Loader />
@@ -115,10 +115,9 @@ export default function Page() {
 
                             {loading && <Loader />}
                         </ConversationContent>
-
-                        <ConversationScrollButton />
                     </>
                 )}
+                <ConversationScrollButton />
             </Conversation>
 
             <PromptInput
@@ -129,7 +128,7 @@ export default function Page() {
                         setInput("");
                     }
                 }}
-                className="mt-2 w-full max-w-4xl mx-auto relative"
+                className="mt-2 w-full max-w-4xl mx-auto relative "
             >
                 <PromptInputTextarea
                     value={input}
@@ -142,6 +141,6 @@ export default function Page() {
                     <PromptInputSubmit disabled={!input.trim()} />
                 </PromptInputToolbar>
             </PromptInput>
-        </>
+        </div>
     );
 }

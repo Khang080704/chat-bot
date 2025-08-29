@@ -66,13 +66,13 @@ export default function Page() {
         ]);
         chatListStore
             .getState()
-            .addList({ sessionId: `${sessionId}`, title: data.chatTitle });
+            .addList({ sessionId: `${sessionId}`, title: data.chatTitle, createdAt: Date.now(), updatedAt: Date.now() });
         setLoading(false);
         router.push(`/c/${sessionId}`);
     }
 
     return (
-        <div className="w-full sm:px-5 mx-auto flex flex-col h-screen py-6">
+        <div className="w-full sm:px-5 mx-auto flex flex-col h-screen py-6 px-2">
             <Conversation className="w-full relative h-120">
                 <ConversationContent>
                     {messages.map((message, index) => (
