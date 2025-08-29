@@ -4,6 +4,8 @@ import { getAllListKeys } from "@/lib/list";
 type chatSession = {
     sessionId: string;
     title: string;
+    createdAt: number;
+    updatedAt: number;
 };
 
 type ChatListStore = {
@@ -11,6 +13,7 @@ type ChatListStore = {
     addList: (chatId: chatSession) => void;
     removeList: (chatId: string) => void;
     getAllListKeys: () => Promise<void>;
+    sortList: () => Promise<void>;
 };
 
 export const chatListStore = create<ChatListStore>((set) => ({
@@ -27,4 +30,10 @@ export const chatListStore = create<ChatListStore>((set) => ({
         const result = await getAllListKeys();
         set({ listChat: result });
     },
+    sortList: async () => {
+        const newSortList = await getAllListKeys();
+        set((state) => ({
+            listChat: newSortList
+        }));
+    }
 }));
