@@ -23,6 +23,7 @@ import { Response } from "@/components/ui/shadcn-io/ai/response";
 import Logo from "@/public/ChatGPT-Logo.png";
 import { useChatDetail } from "@/hooks/user-chat-detail";
 import { useCurrentUser } from "@/hooks/use-user";
+import { chatListStore } from "@/app/store/list";
 
 type Message = {
     id: string;
@@ -37,6 +38,7 @@ export default function Page() {
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
     const { data: userData } = useCurrentUser();
+    const list = chatListStore(state => state.sortList);
 
     useEffect(() => {
         console.log("use effect called");
@@ -76,6 +78,7 @@ export default function Page() {
             },
         ]);
         setLoading(false);
+        await list();
     }
 
     return (

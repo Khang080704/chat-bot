@@ -8,5 +8,9 @@ import redis from "@/db/redis";
 export async function getAllListKeys() {
     const user = await currentUser();
     const listChat = await redis.hgetall(`user:${user?.id}:sessions`);
-    return Object.values(listChat).map((s) => JSON.parse(s));
+    return Object.values(listChat).map((s) => JSON.parse(s)).sort((a, b) => {
+        if (a.updatedAt < b.updatedAt) return 1;
+        if (a.updatedAt > b.updatedAt) return -1;
+        return 0;
+    });
 }

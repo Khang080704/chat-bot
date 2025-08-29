@@ -1,5 +1,5 @@
 "use client";
-import { useClerk, useUser } from "@clerk/nextjs";
+import { useClerk, UserButton, useUser } from "@clerk/nextjs";
 import { useState } from "react";
 import {
     DropdownMenu,
@@ -10,36 +10,35 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { LogOut, Settings } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { UserProfile } from "@clerk/nextjs";
-
-function Profile() {
-    return (
-        <div className="h-20 w-[70%] mx-auto">
-            <UserProfile />
-        </div>
-    );
-}
+import { ChevronDown, ChevronUp, LogOut, Settings } from "lucide-react";
+import { useSidebar } from "./ui/sidebar";
 
 export default function UserProfileManagement() {
     const user = useUser();
-    const [open, setOpen] = useState();
-    const { signOut } = useClerk();
+    const { signOut, openUserProfile } = useClerk();
+    const { isMobile, state } = useSidebar();
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <div className="flex items-center gap-2 cursor-pointer p-2 hover:bg-gray-200 hover:rounded-2xl">
-                    <img
-                        src={user.user?.imageUrl}
-                        className="w-10 rounded-full"
-                    />
-                    <div className="flex flex-col">
-                        <p>{user.user?.fullName}</p>
-                        <p>{user.user?.emailAddresses[0].emailAddress}</p>
+                {state === "expanded" ? (
+                    <div className="flex items-center justify-between gap-1 cursor-pointer p-2 hover:bg-gray-200 hover:rounded-2xl">
+                        <img
+                            src={user.user?.imageUrl}
+                            className="w-10 rounded-full"
+                        />
+                        <div className="flex flex-col">
+                            <p>{user.user?.fullName}</p>
+                            <p>{user.user?.emailAddresses[0].emailAddress}</p>
+                        </div>
+                        <div className="flex flex-col">
+                            <ChevronUp size={16} />
+                            <ChevronDown size={16} />
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <UserButton/>
+                )}
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
                 <DropdownMenuLabel>
@@ -56,35 +55,32 @@ export default function UserProfileManagement() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <DropdownMenuItem
-                                className="cursor-pointer"
-                                onSelect={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                }}
-                            >
-                                <div className="flex items-center gap-2 p-2 text-[20px] cursor-pointer">
-                                    <span>
-                                        {" "}
-                                        <Settings />
-                                    </span>{" "}
-                                    Manage Profile
-                                </div>
-                            </DropdownMenuItem>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogTitle>Manage Account</DialogTitle>
-                            <Profile />
-                        </DialogContent>
-                    </Dialog>
+                    <DropdownMenuItem
+                        className="cursor-pointer"
+                        onSelect={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openUserProfile();
+                        }}
+                    >
+                        <div className="flex items-center gap-2 p-2 text-[20px] cursor-pointer">
+                            <span>
+                                {" "}
+                                <Settings />
+                            </span>{" "}
+                            Manage Profile
+                        </div>
+                    </DropdownMenuItem>
 
-                    <DropdownMenuItem className="cursor-pointer">
-                        <div
-                            className="flex items-center gap-2 p-2 text-[20px]"
-                            onClick={() => signOut({ redirectUrl: "/" })}
-                        >
+                    <DropdownMenuItem
+                        className="cursor-pointer"
+                        onSelect={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            signOut({ redirectUrl: "/" });
+                        }}
+                    >
+                        <div className="flex items-center gap-2 p-2 text-[20px]">
                             <span>
                                 {" "}
                                 <LogOut />

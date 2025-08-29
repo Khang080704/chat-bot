@@ -1,5 +1,5 @@
 "use client";
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import ThreeDotsMenu from "./ThreeDots";
 import { useSidebar } from "./ui/sidebar";
 import ReactMarkdown from "react-markdown";
@@ -18,6 +18,7 @@ export default function ChatTitle({
     const [isRenaming, setIsRenaming] = useState(false);
     const [newTitle, setNewTitle] = useState(title);
     const inputRef = useRef<HTMLInputElement>(null);
+    const { id } = useParams();
 
     const getChat = () => {
         setOpenMobile(false);
@@ -49,7 +50,7 @@ export default function ChatTitle({
         <RenameContext.Provider value={{ isRenaming, setIsRenaming }}>
             <div
                 onClick={getChat}
-                className="hover:bg-gray-200 p-3 rounded-2xl group flex items-center justify-between cursor-pointer"
+                className={`hover:bg-gray-200 p-3 rounded-2xl group flex items-center justify-between cursor-pointer ${id === chatkey ? "bg-gray-200" : ""}`}
             >
                 {isRenaming ? (
                     <Input
