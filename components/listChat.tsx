@@ -1,29 +1,29 @@
-"use client";
-import ChatTitle from "./ChatTitle";
+'use client'
 import { chatListStore } from "@/app/store/list";
-import { useSidebar } from "./ui/sidebar";
+import ChatTitle from "./ChatTitle";
+import { useEffect } from "react";
 
-export default function ListChat() {
-    const listChat = chatListStore((state) => state.listChat);
-    const { isMobile, state } = useSidebar();
+export default  function ListChat({list}: {list: any[]}) {
+    const {setList, listChat} = chatListStore();
+
+    useEffect(() => {
+        setList(list);
+    }, [])
+
     return (
-        state === "expanded" && (
-            <div className="">
-                <h2 className="text-gray-400 text-xl my-2 px-3">Chats</h2>
-                <ul>
-                    {listChat.map((chat) => (
-                        <div
-                            key={`${chat.sessionId}`}
-                            className="cursor-pointer"
-                        >
+        <div className="">
+            <h2 className="text-gray-400 text-xl my-2 px-3">Chats</h2>
+            <ul>
+                {listChat.map((chat) => (
+                    <div key={`${chat.sessionId}`} className="cursor-pointer">
+
                             <ChatTitle
                                 chatkey={`${chat.sessionId}`}
                                 title={chat.title}
                             />
-                        </div>
-                    ))}
-                </ul>
-            </div>
-        )
+                    </div>
+                ))}
+            </ul>
+        </div>
     );
 }
