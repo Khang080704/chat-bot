@@ -16,6 +16,7 @@ import { getAllListKeys } from "@/lib/list";
 
 export async function AppSidebar() {
     const listChat = await getAllListKeys();
+    console.log("Component mounted")
 
     return (
         <Sidebar collapsible="icon">

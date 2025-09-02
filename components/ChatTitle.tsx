@@ -46,9 +46,9 @@ export default function ChatTitle({
         }
     }, []);
 
-    if((isMobile && state === "collapsed") || (!isMobile && state === "collapsed")) {
-        return null
-    }
+    // if((isMobile && state === "collapsed") || (!isMobile && state === "collapsed")) {
+    //     return null
+    // }
 
     // if(isMobile || state === "collapsed") {
     //     return null
@@ -73,7 +73,7 @@ export default function ChatTitle({
                         ref={inputRef}
                     />
                 ) : (
-                    <ReactMarkdown>{(title !== newTitle) ? newTitle : title}</ReactMarkdown>
+                    <ReactMarkdown>{(title !== newTitle) ? newTitle : title}</ReactMarkdown> 
                 )}
                 <ThreeDotsMenu chatId={chatkey} />
             </div>

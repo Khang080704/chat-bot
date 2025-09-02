@@ -5,9 +5,10 @@ import { redirect } from "next/navigation";
 import { useSidebar } from "./ui/sidebar";
 
 export default function NewChat() {
-    const { state, isMobile } = useSidebar();
+    const { state, isMobile, setOpenMobile } = useSidebar();
 
     const handleNewChat = () => {
+        setOpenMobile(false);
         redirect("/");
     };
 

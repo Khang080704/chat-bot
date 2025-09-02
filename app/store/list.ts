@@ -21,7 +21,7 @@ export const chatListStore = create<ChatListStore>((set) => ({
     listChat: [],
     addList: (chatId: chatSession) =>
         set((state) => ({
-            listChat: [...state.listChat, chatId],
+            listChat: [chatId, ...state.listChat],
         })),
     removeList: (chatId: string) =>
         set((state) => ({
