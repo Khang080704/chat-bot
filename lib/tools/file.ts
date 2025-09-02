@@ -1,6 +1,6 @@
-const fs = require('fs')
-const { z } = require("zod");
-const {tool} = require('@langchain/core/tools');
+import fs from "fs"
+import {z} from "zod"
+import {tool} from "@langchain/core/tools"
 
 const writeToFile = async ({filename, content, append=false}: {filename: string, content: string, append: boolean}) => {
     if(append) {
