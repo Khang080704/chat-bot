@@ -2,18 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     /* config options here */
-    experimental: {
-        optimizePackageImports: ["@chakra-ui/react"],
-    },
-    images: {
-        remotePatterns: [
-            {
-                protocol: "https",
-                hostname: "https://www.citypng.com/",
-                pathname: "/**",
-            },
-        ],
-    },
     typescript: {
         // !! WARN !!
         // Dangerously allow production builds to successfully complete even if
