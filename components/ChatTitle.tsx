@@ -46,9 +46,13 @@ export default function ChatTitle({
         }
     }, []);
 
-    if(isMobile || state === "collapsed") {
+    if((isMobile && state === "collapsed") || (!isMobile && state === "collapsed")) {
         return null
     }
+
+    // if(isMobile || state === "collapsed") {
+    //     return null
+    // }
 
     return (
         <RenameContext.Provider value={{ isRenaming, setIsRenaming }}>
