@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit, NotebookPenIcon } from "lucide-react";
+import { Edit } from "lucide-react";
 import { redirect } from "next/navigation";
 import { useSidebar } from "./ui/sidebar";
 
@@ -29,7 +29,10 @@ export default function NewChat() {
             New Chat
         </div>
     ) : (
-        <div className="hover:bg-gray-200 rounded-2xl flex items-center justify-center p-1">
+        <div
+            className="hover:bg-gray-200 rounded-2xl flex items-center justify-center p-1"
+            onClick={handleNewChat}
+        >
             <Edit />
         </div>
     );

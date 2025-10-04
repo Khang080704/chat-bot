@@ -12,7 +12,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Trash, Edit, Share } from "lucide-react";
 import { redirect } from "next/navigation";
-import { chatListStore } from "@/app/store/list";
+import { useAppDispatch } from "@/hooks/use-dispatch";
+import { removeList } from "@/redux/features/chatList/chatListSlice";
 
 import {
     Dialog,
@@ -24,13 +25,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { RenameContext } from "@/context/renameContext";
 
 export default function ThreeDotsMenu({ chatId }: { chatId: string }) {
-    const [open, setOpen] = useState(false);
     const rename = useContext(RenameContext);
-    
+    const dispatch = useAppDispatch();
 
     async function handleDelete(e: any) {
         e.stopPropagation();
@@ -45,7 +45,7 @@ export default function ThreeDotsMenu({ chatId }: { chatId: string }) {
         });
         const message = await res.json();
         console.log(message);
-        chatListStore.getState().removeList(chatId);
+        dispatch(removeList(chatId));
         redirect("/");
     }
 

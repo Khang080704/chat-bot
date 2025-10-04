@@ -7,6 +7,9 @@ import { RenameContext, Rename } from "@/context/renameContext";
 import { useEffect, useRef, useState } from "react";
 import { Input } from "./ui/input";
 
+import clsx from 'clsx'
+import style from "./style.module.css"
+
 export default function ChatTitle({
     chatkey,
     title,
@@ -19,6 +22,7 @@ export default function ChatTitle({
     const [newTitle, setNewTitle] = useState(title);
     const inputRef = useRef<HTMLInputElement>(null);
     const { id } = useParams();
+    const titleStyle = clsx(style.title);
 
     const getChat = () => {
         setOpenMobile(false);
@@ -39,20 +43,12 @@ export default function ChatTitle({
         
     };
 
-    useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current.focus();
-            inputRef.current.select();
-        }
-    }, []);
-
-    // if((isMobile && state === "collapsed") || (!isMobile && state === "collapsed")) {
-    //     return null
-    // }
-
-    // if(isMobile || state === "collapsed") {
-    //     return null
-    // }
+    // useEffect(() => {
+    //     if (inputRef.current) {
+    //         inputRef.current.focus();
+    //         inputRef.current.select();
+    //     }
+    // }, []);
 
     return (
         <RenameContext.Provider value={{ isRenaming, setIsRenaming }}>
@@ -73,7 +69,7 @@ export default function ChatTitle({
                         ref={inputRef}
                     />
                 ) : (
-                    <ReactMarkdown>{(title !== newTitle) ? newTitle : title}</ReactMarkdown> 
+                    <p className={titleStyle}>{(title !== newTitle) ? newTitle : title}</p> 
                 )}
                 <ThreeDotsMenu chatId={chatkey} />
             </div>
