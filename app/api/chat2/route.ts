@@ -11,7 +11,7 @@ import { browserTool } from "@/lib/tools/browser";
 import { WikiTool, TavilyTool } from "@/lib/tools/search";
 import { fileTool } from "@/lib/tools/file";
 
-const tools = [TavilyTool, fileTool, browserTool];
+const tools = [TavilyTool, fileTool, browserTool, WikiTool];
 
 export async function POST(request: Request) {
     const { message, sessionId } = await request.json();

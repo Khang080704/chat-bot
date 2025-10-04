@@ -1,12 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { redirect } from "next/navigation";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { chatListStore } from "@/app/store/list";
-import { ArrowUp } from "lucide-react";
 import {
     PromptInput,
     PromptInputTextarea,
@@ -21,6 +16,8 @@ import {
     ConversationScrollButton,
 } from "@/components/ui/shadcn-io/ai/conversation";
 import { Response } from "@/components/ui/shadcn-io/ai/response";
+import { addList } from "@/redux/features/chatList/chatListSlice";
+import { useAppDispatch } from "@/hooks/use-dispatch";
 
 type Message = {
     id: string;
@@ -33,6 +30,7 @@ export default function Page() {
     const [input, setInput] = useState("");
     const router = useRouter();
     const [loading, setLoading] = useState(false);
+    const dispatch = useAppDispatch();
 
     async function sendMessage(input: string) {
         setLoading(true);
@@ -64,34 +62,43 @@ export default function Page() {
                 content: data.agentResult.output,
             },
         ]);
-        chatListStore
-            .getState()
-            .addList({ sessionId: `${sessionId}`, title: data.chatTitle, createdAt: Date.now(), updatedAt: Date.now() });
+        dispatch(
+            addList({
+                sessionId: `${sessionId}`,
+                title: data.chatTitle,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+            })
+        );
         setLoading(false);
         router.push(`/c/${sessionId}`);
     }
 
     return (
-        <div className="w-full sm:px-5 mx-auto flex flex-col h-screen py-6 px-2">
-            <Conversation className="w-full relative h-120">
-                <ConversationContent>
-                    {messages.map((message, index) => (
-                        <Message from={message.role} key={index}>
-                            <MessageContent role={message.role}>
-                                {message.role === "assistant" ? (
-                                    <Response>{message.content}</Response>
-                                ) : (
-                                    message.content
-                                )}
-                            </MessageContent>
-                        </Message>
-                    ))}
+        <div className={`w-full sm:px-5 mx-auto flex flex-col h-screen py-6 px-2 ${messages.length === 0 ? "justify-center items-center" : ""}`}>
+            {messages.length !== 0 ? (
+                <Conversation className="w-full relative h-120">
+                    <ConversationContent>
+                        {messages.map((message, index) => (
+                            <Message from={message.role} key={index}>
+                                <MessageContent role={message.role}>
+                                    {message.role === "assistant" ? (
+                                        <Response>{message.content}</Response>
+                                    ) : (
+                                        message.content
+                                    )}
+                                </MessageContent>
+                            </Message>
+                        ))}
 
-                    {loading && <Loader />}
-                </ConversationContent>
+                        {loading && <Loader />}
+                    </ConversationContent>
 
-                <ConversationScrollButton />
-            </Conversation>
+                    <ConversationScrollButton />
+                </Conversation>
+            ) : (
+                <p className="my-auto sm:my-20 text-2xl">How can I help you today?</p>
+            )}
             <PromptInput
                 onSubmit={(e) => {
                     e.preventDefault();

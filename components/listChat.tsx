@@ -1,26 +1,31 @@
 "use client";
-import { chatListStore } from "@/app/store/list";
 import ChatTitle from "./ChatTitle";
 import { useEffect } from "react";
 import { useSidebar } from "./ui/sidebar";
+import {
+    setList,
+    fetchAllListKeys,
+} from "@/redux/features/chatList/chatListSlice";
+import { RootState } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/hooks/use-dispatch";
 
 export default function ListChat({ list }: { list: any[] }) {
-    const { setList, listChat } = chatListStore();
+    const dispatch = useAppDispatch();
+    const listChat = useAppSelector((state: RootState) => state.chatList.listChat);
     const { state, isMobile } = useSidebar();
-    const hidden = (state == "collapsed" ) 
+    const hidden = state == "collapsed";
 
     useEffect(() => {
-        if(listChat.length === 0) {
-            setList(list);
+        if (listChat.length === 0) {
+            dispatch(setList(list));
         }
         else {
-            setList(listChat);
+            dispatch(fetchAllListKeys());
         }
     }, []);
 
-
     return (
-        <div className={hidden ? "hidden" : ''}>
+        <div className={hidden ? "hidden" : ""}>
             <h2 className="text-gray-400 text-xl my-2 px-3">Chats</h2>
 
             <ul>
