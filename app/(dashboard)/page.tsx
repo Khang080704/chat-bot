@@ -81,7 +81,7 @@ export default function Page() {
                     <ConversationContent>
                         {messages.map((message, index) => (
                             <Message from={message.role} key={index}>
-                                <MessageContent role={message.role}>
+                                <MessageContent role={message.role} className={`${message.role === "user" ? "whitespace-pre-wrap" : ""}`}>
                                     {message.role === "assistant" ? (
                                         <Response>{message.content}</Response>
                                     ) : (

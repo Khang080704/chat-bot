@@ -43,7 +43,6 @@ export default function ChatConversation() {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        console.log("use effect called");
         if (data?.response) {
             setMessages(data.response);
         }
@@ -94,7 +93,14 @@ export default function ChatConversation() {
                             key={index}
                             className="flex items-center"
                         >
-                            <MessageContent role={message.role}>
+                            <MessageContent
+                                role={message.role}
+                                className={`${
+                                    message.role === "user"
+                                        ? "whitespace-pre-wrap"
+                                        : ""
+                                }`}
+                            >
                                 {message.role === "assistant" ? (
                                     <Response>{message.content}</Response>
                                 ) : (

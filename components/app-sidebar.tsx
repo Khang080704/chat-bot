@@ -6,17 +6,16 @@ import {
     SidebarHeader,
     SidebarMenu,
     SidebarMenuItem,
-    SidebarTrigger,
 } from "@/components/ui/sidebar";
 import ListChat from "./listChat";
 import NewChat from "./newChat";
 import UserProfile from "./UserProfile";
 import SideBarHeaderCustom from "./SideBarHeader";
+
 import { getAllListKeys } from "@/lib/list";
 
 export async function AppSidebar() {
     const listChat = await getAllListKeys();
-    console.log("Component mounted")
 
     return (
         <Sidebar collapsible="icon">
@@ -33,7 +32,7 @@ export async function AppSidebar() {
                 </SidebarGroup>
 
                 <SidebarGroup className="flex-1 overflow-y-auto">
-                    <ListChat list={listChat}/>
+                    <ListChat list={listChat} />
                 </SidebarGroup>
 
                 <SidebarFooter>
