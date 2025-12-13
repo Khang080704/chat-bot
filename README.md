@@ -243,7 +243,7 @@ The easiest way to deploy this application is using [Vercel](https://vercel.com)
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-repo/chat-bot)
 
-**Live Demo**: [https://chat-bot-rq8t.vercel.app/](https://chat-bot-alpha-sandy.vercel.app/)
+**Live Demo**: [https://chat-bot-rq8t.vercel.app/](https://chat-bot-rq8t.vercel.app/)
 
 ### Environment Variables
 
