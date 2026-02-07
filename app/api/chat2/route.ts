@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import redis from "@/db/redis";
 import { currentUser } from "@clerk/nextjs/server";
 import { model } from "@/lib/ai/model";
+import connectToMongoDB from "@/db/mongodb";
+import { ChatSession } from "@/models";
 
 //import tool
 import { ragTool } from "@/lib/tools/calculus";
@@ -12,6 +14,7 @@ import { WikiTool, TavilyTool } from "@/lib/tools/search";
 import { fileTool } from "@/lib/tools/file";
 
 const tools = [TavilyTool, fileTool, browserTool, WikiTool];
+const CACHE_TTL = 300; // 5 minutes
 
 export async function POST(request: Request) {
     const { message, sessionId } = await request.json();
@@ -20,40 +23,37 @@ export async function POST(request: Request) {
 
     let chatTitle = "";
     if (user) {
-        //new chat
-        const chats = await redis.hgetall(`user:${user.id}:sessions`);
-        const parsedChats = Object.values(chats).map((item) =>
-            JSON.parse(item)
-        );
-        if (!parsedChats.some((chat) => chat.sessionId === sessionId)) {
+        await connectToMongoDB();
+        
+        // Check if session exists
+        const existingSession = await ChatSession.findOne({ sessionId, userId: user.id });
+        
+        if (!existingSession) {
+            // New chat - generate title
             const titlePrompt = `Briefly summarize the following question into a short title, right in regular text:\n\n${message}`;
             const title = await model.invoke(titlePrompt);
             chatTitle = title.content as string;
-            await redis.hset(
-                `user:${user.id}:sessions`,
+            
+            // Create new session in MongoDB
+            await ChatSession.create({
                 sessionId,
-                JSON.stringify({
-                    sessionId: `${sessionId}`,
-                    title: title.content,
-                    createdAt: Date.now(),
-                    updatedAt: Date.now(),
-                })
-            );
+                userId: user.id,
+                title: title.content,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            });
         } else {
-            //exits chat
-            const key = `user:${user?.id}:sessions`;
-            const chat = await redis.hget(key, sessionId);
-            if (chat) {
-                const parsedChat = JSON.parse(chat);
-                await redis.hset(
-                    key,
-                    sessionId,
-                    JSON.stringify({
-                        ...parsedChat,
-                        updatedAt: Date.now(),
-                    })
-                );
-            }
+            // Existing chat - update timestamp
+            existingSession.updatedAt = new Date();
+            await existingSession.save();
+        }
+        
+        // Invalidate cache for user's session list
+        const cacheKey = `cache:user:${user.id}:sessions`;
+        try {
+            await redis.del(cacheKey);
+        } catch (error) {
+            console.error('Cache invalidation error:', error);
         }
     }
 
