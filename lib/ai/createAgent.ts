@@ -7,7 +7,7 @@ import { model } from "./model";
 import { ChatMessageHistory } from "langchain/memory";
 import { RunnableWithMessageHistory } from "@langchain/core/runnables";
 import { vectorStore } from "./redis";
-import { createHistory } from "./redis";
+import { createMongoDBHistory } from "./mongoHistory";
 
 export function createExecutor(systemPrompt: string, tools: any[]) {
     const prompt = ChatPromptTemplate.fromMessages([
@@ -23,7 +23,7 @@ export function createExecutor(systemPrompt: string, tools: any[]) {
     const runnableWithHistory = new RunnableWithMessageHistory({
         runnable: excutor,
         getMessageHistory: async (sessionId: string) => {
-            return createHistory(sessionId);
+            return createMongoDBHistory(sessionId);
         },
         inputMessagesKey: "input", 
         historyMessagesKey: "chat_history",
